@@ -10,7 +10,7 @@ import dnnlib.tflib as tflib
 import config
 from encoder.generator_model import Generator
 from encoder.perceptual_model import PerceptualModel, load_images
-#from tensorflow.keras.models import load_model
+# from tensorflow.keras.models import load_model
 from keras.models import load_model
 from keras.applications.resnet50 import preprocess_input
 
@@ -112,7 +112,12 @@ def main():
 
     # Initialize generator and perceptual model
     tflib.init_tf()
-    with dnnlib.util.open_url(args.model_url, cache_dir=config.cache_dir) as f:
+    # with dnnlib.util.open_url(args.model_url, cache_dir=config.cache_dir) as f:
+        # generator_network, discriminator_network, Gs_network = pickle.load(f)
+    def open_test_data():
+        return open("/content/stylegan-encoder/cache/karras2019stylegan-ffhq-1024x1024.pkl", "rb")
+
+    with open_test_data() as f:
         generator_network, discriminator_network, Gs_network = pickle.load(f)
 
     generator = Generator(Gs_network, args.batch_size, clipping_threshold=args.clipping_threshold, tiled_dlatent=args.tile_dlatents, model_res=args.model_res, randomize_noise=args.randomize_noise)
